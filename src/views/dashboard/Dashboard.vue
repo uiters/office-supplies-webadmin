@@ -591,11 +591,14 @@
         },
       }
     },
-
+    mounted () {
+      this.$store.dispatch('auth/login', {})
+    },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
       },
+
     },
   }
 </script>

@@ -125,7 +125,6 @@
               </template>
             </v-item>
           </v-item-group>
-
         </v-card-text>
       </v-card>
     </v-menu>
@@ -165,7 +164,7 @@
     }),
 
     computed: {
-      ...mapState(['barImage']),
+      ...mapState(['initState/barImage']),
     },
 
     watch: {
@@ -190,7 +189,7 @@
 
     methods: {
       ...mapMutations({
-        setBarImage: 'SET_BAR_IMAGE',
+        setBarImage: 'initState/SET_BAR_IMAGE',
       }),
     },
   }

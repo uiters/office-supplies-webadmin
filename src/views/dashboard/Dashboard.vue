@@ -393,6 +393,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'DashboardDashboard',
 
@@ -591,12 +593,20 @@
         },
       }
     },
+    async mounted () {
+      await this.$store.dispatch('getProducts')
+      console.log(this.products)
+    },
+    computed: {
+      ...mapState({
+        products: state => state.product.products,
+
+      }),
+    },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
       },
-
     },
-
   }
 </script>

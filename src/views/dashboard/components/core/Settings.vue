@@ -164,7 +164,7 @@
     }),
 
     computed: {
-      ...mapState(['initState/barImage']),
+      ...mapState({ barImage: 'initState/barImage' }),
     },
 
     watch: {

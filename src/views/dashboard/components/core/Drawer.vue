@@ -132,7 +132,7 @@
       }),
       drawer: {
         get () {
-          return this.$store.state.drawer
+          return this.$store.state.initState.drawer
         },
         set (val) {
           this.$store.commit('initState/SET_DRAWER', val)

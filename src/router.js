@@ -7,7 +7,8 @@ const Index = () => import('@/views/dashboard/Index')
 const Dashboard = () => import('@/views/dashboard/Dashboard')
 const UserProfile = () => import('@/views/dashboard/pages/UserProfile')
 const Login = () => import('@/views/dashboard/pages/WelcomePage')
-export default new Router({
+const NotFound = () => import('@/views/Notfound')
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -15,6 +16,16 @@ export default new Router({
       name: 'Login',
       path: '/login',
       component: Login,
+    },
+    {
+      path: '/not_found',
+      name: 'NotFound',
+      component: NotFound,
+      props: true,
+    },
+    {
+      path: '*',
+      redirect: { name: 'NotFound', params: { resource: 'page' } },
     },
     {
       path: '/',
@@ -38,9 +49,26 @@ export default new Router({
           path: 'tables/regular-tables',
           component: () => import('@/views/dashboard/tables/RegularTables'),
         },
-        // Login
-
       ],
     },
+
   ],
 })
+
+router.beforeEach(async (to, from, next) => {
+  next()
+  console.log(
+    `Router::beforeEach:: ${to.name} from ${from.name}\n  at ${new Date(
+      Date.now(),
+    ).toDateString()}`,
+  )
+  if (to.name === 'Login') {
+    // TODO: check again
+    const token = localStorage.getItem('token')
+    if (token) {
+      next({ name: 'Dashboard' })
+    }
+  }
+})
+
+export default router

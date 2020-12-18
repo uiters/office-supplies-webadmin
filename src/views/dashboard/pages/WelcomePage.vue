@@ -21,6 +21,7 @@
       <v-btn
         class="text-capitalize submit"
         color="#FFB74D"
+        :loading="loading"
         @click="handleSignIn()"
       >
         Sign In
@@ -37,18 +38,19 @@
         showSignUp: '',
         email: '',
         password: '',
-
+        loading: false,
       }
     },
 
     methods: {
       async handleSignIn () {
+        this.loading = true
         const response = await this.$store.dispatch('auth/login', {
           username: this.email,
           password: this.password,
         })
+        this.loading = false
         if (response) { this.$router.push({ name: 'Dashboard' }) }
-        alert('Email or password error, you need to input again!!')
       },
 
     },

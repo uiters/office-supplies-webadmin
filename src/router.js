@@ -6,10 +6,16 @@ Vue.use(Router)
 const Index = () => import('@/views/dashboard/Index')
 const Dashboard = () => import('@/views/dashboard/Dashboard')
 const UserProfile = () => import('@/views/dashboard/pages/UserProfile')
+const Login = () => import('@/views/dashboard/pages/WelcomePage')
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      name: 'Login',
+      path: '/login',
+      component: Login,
+    },
     {
       path: '/',
       component: Index,
@@ -32,6 +38,8 @@ export default new Router({
           path: 'tables/regular-tables',
           component: () => import('@/views/dashboard/tables/RegularTables'),
         },
+        // Login
+
       ],
     },
   ],

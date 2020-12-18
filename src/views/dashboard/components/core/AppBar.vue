@@ -98,12 +98,12 @@
     }),
 
     computed: {
-      ...mapState(['drawer']),
+      ...mapState({ drawer: 'initState/drawer' }),
     },
 
     methods: {
       ...mapMutations({
-        setDrawer: 'SET_DRAWER',
+        setDrawer: 'initState/SET_DRAWER',
       }),
     },
   }

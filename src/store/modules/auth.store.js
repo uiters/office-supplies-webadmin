@@ -2,17 +2,16 @@ import authService from './../../api/auth.service'
 
 export default {
   namespaced: true,
-  state: {
-    username: '',
-    password: '',
-  },
   actions: {
-    login (payload) {
-      payload = {
-        username: 'admin@gmail.com',
-        password: '123456789',
+    async login (type, payload) {
+      const response = await authService.login(payload)
+      if (response.data) {
+        localStorage.setItem('token', response.data)
       }
-      authService.login(payload).then(value => console.log(value))
+      return !!response.data
+    },
+    async logout () {
+      localStorage.removeItem('token')
     },
   },
 }

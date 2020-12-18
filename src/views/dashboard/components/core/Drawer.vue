@@ -71,6 +71,15 @@
         />
       </template>
 
+      <v-btn
+        class="ml-7"
+        icon
+        @click="logout()"
+      >
+        <v-icon>mdi-exit-run</v-icon>
+        Log out
+      </v-btn>
+
       <!-- Style cascading bug  -->
       <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
       <div />
@@ -112,6 +121,7 @@
           to: '/tables/regular-tables',
         },
       ],
+
     }),
 
     computed: {
@@ -146,6 +156,10 @@
           children: item.children ? item.children.map(this.mapItem) : undefined,
           title: this.$t(item.title),
         }
+      },
+      logout () {
+        this.$store.dispatch('auth/logout')
+        this.$router.push({ name: 'Login' })
       },
     },
 

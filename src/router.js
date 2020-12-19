@@ -45,7 +45,7 @@ const router = new Router({
         },
         // Tables
         {
-          name: 'Regular Tables',
+          name: 'Accounts',
           path: 'tables/regular-tables',
           component: () => import('@/views/dashboard/tables/RegularTables'),
         },

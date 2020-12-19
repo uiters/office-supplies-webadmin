@@ -3,6 +3,7 @@ import productService from './../../api/product.service'
 export default {
   state: {
     _products: [],
+    _money: 0,
   },
 
   getters: {
@@ -14,14 +15,22 @@ export default {
         typeId: value.typeId.typeName,
         productImage: value.productImage,
         status: value.status,
+        quantity: value.quantity,
+        price: value.price,
       }
     }),
+    money: state => state._money.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,'),
   },
   mutations: {
     SET_PRODUCTS (state, products) {
       state._products = [...products]
     },
-
+    SET_MONEY (state) {
+      state._products.map(value => {
+      console.log(value)
+        state._money = value.quantity * value.price
+      })
+    },
   },
 
   actions: {

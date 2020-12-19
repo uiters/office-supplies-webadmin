@@ -6,4 +6,9 @@ export default class ProductService {
   static getProduct () {
     return HTTP.get(`${this.api}/?page=1&keyword=a&sortBy=price`)
   }
+
+  static onCensored (id, status) {
+    console.log(id, status)
+    return HTTP.put(`${this.api}`, { id, status })
+  }
 }

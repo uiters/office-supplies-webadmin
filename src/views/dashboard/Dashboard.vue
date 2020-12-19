@@ -277,7 +277,7 @@
 
       <v-col
         cols="12"
-        md="6"
+        md="12"
       >
         <base-material-card
           color="warning"
@@ -285,107 +285,50 @@
         >
           <template v-slot:heading>
             <div class="display-2 font-weight-light">
-              Employees Stats
+              Products
             </div>
 
             <div class="subtitle-1 font-weight-light">
-              New employees on 15th September, 2016
+              <!--              New employees on 15th September, 2016-->
             </div>
           </template>
           <v-card-text>
             <v-data-table
               :headers="headers"
               :items="items"
-            />
+            >
+              <template v-slot:item.productImage="{ item }">
+                <v-img
+                  :src="item.productImage[0]"
+                  max-height="150"
+                />
+              </template>
+              <template v-slot:item.status="{ item }">
+                <v-icon
+                  v-if="item.status===1"
+                  color="green"
+                >
+                  mdi-check-bold
+                </v-icon>
+                <v-icon
+                  v-else
+                  color="red"
+                >
+                  mdi-alert-box
+                </v-icon>
+              </template>
+              <template v-slot:item.check="{item}">
+                <v-btn
+                  text
+                  @click="changeStatus(item.id,item.status)"
+                >
+                  <v-icon>
+                    mdi-pencil-outline
+                  </v-icon>
+                </v-btn>
+              </template>
+            </v-data-table>
           </v-card-text>
-        </base-material-card>
-      </v-col>
-
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <base-material-card class="px-5 py-3">
-          <template v-slot:heading>
-            <v-tabs
-              v-model="tabs"
-              background-color="transparent"
-              slider-color="white"
-            >
-              <span
-                class="subheading font-weight-light mx-3"
-                style="align-self: center"
-              >Tasks:</span>
-              <v-tab class="mr-3">
-                <v-icon class="mr-2">
-                  mdi-bug
-                </v-icon>
-                Bugs
-              </v-tab>
-              <v-tab class="mr-3">
-                <v-icon class="mr-2">
-                  mdi-code-tags
-                </v-icon>
-                Website
-              </v-tab>
-              <v-tab>
-                <v-icon class="mr-2">
-                  mdi-cloud
-                </v-icon>
-                Server
-              </v-tab>
-            </v-tabs>
-          </template>
-
-          <v-tabs-items
-            v-model="tabs"
-            class="transparent"
-          >
-            <v-tab-item
-              v-for="n in 3"
-              :key="n"
-            >
-              <v-card-text>
-                <template v-for="(task, i) in tasks[tabs]">
-                  <v-row
-                    :key="i"
-                    align="center"
-                  >
-                    <v-col cols="1">
-                      <v-list-item-action>
-                        <v-checkbox
-                          v-model="task.value"
-                          color="secondary"
-                        />
-                      </v-list-item-action>
-                    </v-col>
-
-                    <v-col cols="9">
-                      <div
-                        class="font-weight-light"
-                        v-text="task.text"
-                      />
-                    </v-col>
-
-                    <v-col
-                      cols="2"
-                      class="text-right"
-                    >
-                      <v-icon class="mx-1">
-                        mdi-pencil
-                      </v-icon>
-                      <v-icon
-                        color="error"
-                        class="mx-1"
-                      >
-                        mdi-close
-                      </v-icon>
-                    </v-col>
-                  </v-row>
-                </template>
-              </v-card-text>
-            </v-tab-item>
-          </v-tabs-items>
         </base-material-card>
       </v-col>
     </v-row>
@@ -393,7 +336,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'DashboardDashboard',
@@ -474,73 +417,47 @@
             }],
           ],
         },
+        // table
         headers: [
           {
-            sortable: false,
+            sortable: true,
             text: 'ID',
             value: 'id',
           },
           {
-            sortable: false,
+            sortable: true,
             text: 'Name',
-            value: 'name',
+            value: 'userId',
           },
           {
-            sortable: false,
-            text: 'Salary',
-            value: 'salary',
-            align: 'right',
+            sortable: true,
+            text: 'Product name',
+            value: 'productName',
+            align: 'left',
           },
           {
-            sortable: false,
-            text: 'Country',
-            value: 'country',
-            align: 'right',
+            sortable: true,
+            text: 'Product type',
+            value: 'typeId',
+            align: 'left',
           },
           {
-            sortable: false,
-            text: 'City',
-            value: 'city',
-            align: 'right',
+            text: 'Product image',
+            value: 'productImage',
+            align: 'left',
+          },
+          {
+            sortable: true,
+            text: 'Status',
+            value: 'status',
+            align: 'left',
+          },
+          {
+            text: '',
+            value: 'check',
           },
         ],
-        items: [
-          {
-            id: 1,
-            name: 'Dakota Rice',
-            country: 'Niger',
-            city: 'Oud-Tunrhout',
-            salary: '$35,738',
-          },
-          {
-            id: 2,
-            name: 'Minerva Hooper',
-            country: 'Curaçao',
-            city: 'Sinaai-Waas',
-            salary: '$23,738',
-          },
-          {
-            id: 3,
-            name: 'Sage Rodriguez',
-            country: 'Netherlands',
-            city: 'Overland Park',
-            salary: '$56,142',
-          },
-          {
-            id: 4,
-            name: 'Philip Chanley',
-            country: 'Korea, South',
-            city: 'Gloucester',
-            salary: '$38,735',
-          },
-          {
-            id: 5,
-            name: 'Doris Greene',
-            country: 'Malawi',
-            city: 'Feldkirchen in Kārnten',
-            salary: '$63,542',
-          },
-        ],
+        items: [],
         tabs: 0,
         tasks: {
           0: [
@@ -586,26 +503,22 @@
             },
           ],
         },
-        list: {
-          0: false,
-          1: false,
-          2: false,
-        },
       }
+    },
+
+    computed: {
+      ...mapGetters(['products']),
     },
     async mounted () {
       await this.$store.dispatch('getProducts')
-      console.log(this.products)
-    },
-    computed: {
-      ...mapState({
-        products: state => state.product.products,
-
-      }),
+      this.items = [...this.products]
     },
     methods: {
-      complete (index) {
-        this.list[index] = !this.list[index]
+      async changeStatus (id, status) {
+        await this.$store.dispatch('onCensored', { id, status })
+        await this.$store.dispatch('getProducts')
+        this.items = [...this.products]
+        console.log(this.items)
       },
     },
   }

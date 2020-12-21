@@ -8,6 +8,7 @@
       <v-data-table
         :headers="headers"
         :items="accounts"
+        :loading="loading"
         class="elevation-1"
       >
         <template v-slot:item.status="{ item }">
@@ -24,6 +25,16 @@
             mdi-alert-box
           </v-icon>
         </template>
+        <template v-slot:item.banned="{item}">
+          <v-btn
+            text
+            @click="changeStatus(item.id,item.status)"
+          >
+            <v-icon>
+              mdi-pencil-outline
+            </v-icon>
+          </v-btn>
+        </template>
       </v-data-table>
     </v-card>
   </v-container>
@@ -34,6 +45,7 @@
   export default {
     data () {
       return {
+        loading: false,
         headers: [
           {
             text: 'Id',
@@ -54,9 +66,12 @@
       ...mapGetters(['users']),
     },
     async mounted () {
+      this.loading = true
       await this.$store.dispatch('getUsers')
       this.accounts = [...this.users]
+      this.loading = false
     },
-    methods: {},
+    methods: {
+    },
   }
 </script>

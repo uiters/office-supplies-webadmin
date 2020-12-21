@@ -5,7 +5,6 @@ Vue.use(Router)
 
 const Index = () => import('@/views/dashboard/Index')
 const Dashboard = () => import('@/views/dashboard/Dashboard')
-const UserProfile = () => import('@/views/dashboard/pages/UserProfile')
 const Login = () => import('@/views/dashboard/pages/WelcomePage')
 const NotFound = () => import('@/views/Notfound')
 const router = new Router({
@@ -36,12 +35,6 @@ const router = new Router({
           name: 'Dashboard',
           path: '',
           component: Dashboard,
-        },
-        // Pages
-        {
-          name: 'User Profile',
-          path: 'pages/user',
-          component: UserProfile,
         },
         // Tables
         {

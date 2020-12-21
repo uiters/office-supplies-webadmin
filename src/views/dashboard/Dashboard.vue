@@ -14,7 +14,7 @@
           color="info"
           icon="mdi-text-box-multiple-outline"
           title="Total Products"
-          :value="''+items.length"
+          :value="''+totalProducts"
           sub-icon="mdi-clock"
           sub-text="Just Updated"
         />
@@ -69,12 +69,17 @@
             <v-data-table
               :headers="headers"
               :items="items"
+              :loading="loading"
+              :server-items-length="totalItems"
+              :options="pagination"
+              @update:options="changePage($event)"
             >
               <template v-slot:item.productImage="{ item }">
                 <v-img
                   :src="item.productImage[0]"
                   max-height="150"
-                  max-width="150"
+                  max-width="100"
+                  class="ma-2"
                 />
               </template>
               <template v-slot:item.status="{ item }">
@@ -117,79 +122,12 @@
 
     data () {
       return {
-        dailySalesChart: {
-          data: {
-            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-            series: [
-              [12, 17, 7, 17, 23, 18, 38],
-            ],
-          },
-          options: {
-            lineSmooth: this.$chartist.Interpolation.cardinal({
-              tension: 0,
-            }),
-            low: 0,
-            high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-            chartPadding: {
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-            },
-          },
-        },
-        dataCompletedTasksChart: {
-          data: {
-            labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
-            series: [
-              [230, 750, 450, 300, 280, 240, 200, 190],
-            ],
-          },
-          options: {
-            lineSmooth: this.$chartist.Interpolation.cardinal({
-              tension: 0,
-            }),
-            low: 0,
-            high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-            chartPadding: {
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-            },
-          },
-        },
-        emailsSubscriptionChart: {
-          data: {
-            labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
-            series: [
-              [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-
-            ],
-          },
-          options: {
-            axisX: {
-              showGrid: false,
-            },
-            low: 0,
-            high: 1000,
-            chartPadding: {
-              top: 0,
-              right: 5,
-              bottom: 0,
-              left: 0,
-            },
-          },
-          responsiveOptions: [
-            ['screen and (max-width: 640px)', {
-              seriesBarDistance: 5,
-              axisX: {
-                labelInterpolationFnc: function (value) {
-                  return value[0]
-                },
-              },
-            }],
-          ],
+        loading: false,
+        totalItems: 0,
+        pagination: {
+          page: 1,
+          itemsPerPage: 10,
+          sortDesc: [],
         },
         // table
         headers: [
@@ -237,20 +175,36 @@
     },
 
     computed: {
-      ...mapGetters(['products', 'users', 'money']),
+      ...mapGetters(['products', 'users', 'money', 'totalProducts']),
     },
     async mounted () {
-      await this.$store.dispatch('getProducts')
+      await this.$store.dispatch('statisticProducts')
       await this.$store.dispatch('getUsers')
       this.$store.commit('SET_MONEY')
-      this.items = [...this.products]
     },
     methods: {
       async changeStatus (id, status) {
+        const payload = {
+          page: this.pagination.page,
+        }
         await this.$store.dispatch('onCensored', { id, status })
-        await this.$store.dispatch('getProducts')
+        await this.$store.dispatch('getProducts', payload)
         this.items = [...this.products]
         console.log(this.items)
+      },
+      async changePage (e) {
+        this.loading = true
+        const payload = {
+          page: e.page,
+        }
+        await this.$store.dispatch('getProducts', payload)
+        this.totalItems = this.totalProducts
+        this.items = [...this.products]
+        this.pagination = {
+          itemsPerPage: this.items.length,
+          page: e.page,
+        }
+        this.loading = false
       },
     },
   }

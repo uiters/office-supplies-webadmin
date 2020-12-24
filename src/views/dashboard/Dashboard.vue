@@ -75,12 +75,21 @@
               @update:options="changePage($event)"
             >
               <template v-slot:item.productImage="{ item }">
-                <v-img
-                  :src="item.productImage[0]"
-                  max-height="150"
-                  max-width="100"
-                  class="ma-2"
-                />
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-img
+                      :src="item.productImage[0]"
+                      max-height="150"
+                      max-width="100"
+                      class="ma-2"
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </template>
+                  <div>author :{{ item.productDetails.author }}</div>
+                  <div>publish :{{ item.productDetails.publishedDate }}</div>
+                  <div>cover :{{ item.productDetails.cover }}</div>
+                </v-tooltip>
               </template>
               <template v-slot:item.status="{ item }">
                 <v-icon
@@ -131,23 +140,19 @@
         // table
         headers: [
           {
-            sortable: true,
             text: 'ID',
             value: 'id',
           },
           {
-            sortable: true,
             text: 'Name',
             value: 'userId',
           },
           {
-            sortable: true,
             text: 'Product name',
             value: 'productName',
             align: 'left',
           },
           {
-            sortable: true,
             text: 'Product type',
             value: 'typeId',
             align: 'left',
@@ -158,7 +163,6 @@
             align: 'left',
           },
           {
-            sortable: true,
             text: 'Status',
             value: 'status',
             align: 'left',
@@ -177,9 +181,11 @@
       ...mapGetters(['products', 'users', 'money', 'totalProducts']),
     },
     async mounted () {
+      await this.$store.dispatch('statisticInvoices')
       await this.$store.dispatch('statisticProducts')
       await this.$store.dispatch('getUsers')
-      this.$store.commit('SET_MONEY')
+      await this.$store.dispatch('getProducts', { page: 1 })
+      console.log('products::', this.products)
     },
     methods: {
       async changeStatus (id, status) {
@@ -189,7 +195,7 @@
         await this.$store.dispatch('onCensored', { id, status })
         await this.$store.dispatch('getProducts', payload)
         this.items = [...this.products]
-        console.log(this.items)
+        console.log('products::', this.items)
       },
       async changePage (e) {
         this.loading = true

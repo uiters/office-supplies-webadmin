@@ -19,6 +19,7 @@ export default {
         productName: value.productName,
         typeId: value.typeId.typeName,
         productImage: value.productImage,
+        productDetails: value.productDetails,
         status: value.status,
         quantity: value.quantity,
         price: value.price,
@@ -31,11 +32,9 @@ export default {
     SET_PRODUCTS (state, products) {
       state._products = [...products.result]
     },
-    SET_MONEY (state) {
-      state._products.map(value => {
-      console.log(value)
-        state._money = value.quantity * value.price
-      })
+    SET_MONEY (state, products) {
+      products = { ...products, totalPriceFinishInvoices: products.totalPriceFinishInvoices }
+      state._money = products.totalPriceFinishInvoices
     },
     SET_TOTAL_PRODUCTS (state, product) {
       state._totalProducts = product
@@ -57,7 +56,7 @@ export default {
     },
     async onCensored ({ commit }, payload) {
       try {
-         await productService.onCensored(payload.id, payload.status === 1 ? 0 : 1)
+        await productService.onCensored(payload.id, payload.status === 1 ? 0 : 1)
       } catch (e) {
         console.log('cannot change status', e)
       }
@@ -65,13 +64,23 @@ export default {
     async statisticProducts ({ commit }) {
       try {
         const response = await productService.statisticProducts()
-        console.log(response)
         commit(
           'SET_TOTAL_PRODUCTS',
           response.data,
         )
       } catch (e) {
         console.log('cannot get total product', e)
+      }
+    },
+    async statisticInvoices ({ commit }) {
+      try {
+        const response = await productService.statisticInvoices()
+        commit(
+          'SET_MONEY',
+          response.data,
+        )
+      } catch (e) {
+        console.log('cannot get statistic invoices', e)
       }
     },
   }

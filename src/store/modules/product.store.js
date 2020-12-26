@@ -26,7 +26,7 @@ export default {
       }
     }),
     totalProducts: state => state._totalProducts,
-    money: state => state._money.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,'),
+    money: state => state._money.toLocaleString('it-IT'),
   },
   mutations: {
     SET_PRODUCTS (state, products) {
